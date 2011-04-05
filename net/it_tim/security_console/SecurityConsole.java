@@ -9,11 +9,15 @@ import java.util.*;
 import java.awt.GridBagLayout;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.awt.Dialog.ModalExclusionType;
 
 public class SecurityConsole {
-
 	private JFrame frame;
-
 	/**
 	 * Launch the application.
 	 */
@@ -68,6 +72,7 @@ public class SecurityConsole {
 	 */
 	private void initialize() {
 		frame = new JFrame("Відео спостереження");
+		frame.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
 		frame.setSize(1280, 960);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -81,6 +86,32 @@ public class SecurityConsole {
 		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
 		frame.getContentPane().setLayout(gridBagLayout);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu mnFile = new JMenu("File");
+		menuBar.add(mnFile);
+		
+		JMenuItem mntmExit = new JMenuItem("Exit");
+		mntmExit.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				System.exit(0);
+			}
+		});
+		mnFile.add(mntmExit);
+		
+		JMenu mnSystem = new JMenu("System");
+		menuBar.add(mnSystem);
+		
+		JMenuItem mntmCamerasSetup = new JMenuItem("Cameras Setup");
+		mntmCamerasSetup.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				CamSetup camWnd = new CamSetup();
+				camWnd.setVisible(true);
+			}
+		});
+		mnSystem.add(mntmCamerasSetup);
 
 		GridBagConstraints gbc_canvas = new GridBagConstraints();
 		gbc_canvas.insets = new Insets(0, 0, 1, 1);
