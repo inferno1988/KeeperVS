@@ -72,8 +72,7 @@ public class CamSetup extends JFrame {
 		scrollPane.setBounds(0, 35, 590, 366);
 		panel.add(scrollPane);
 
-		CameraTableModel camTableModel = new CameraTableModel();
-		table = new JTable(camTableModel);
+		table = new JTable();
 		table.setAlignmentY(Component.TOP_ALIGNMENT);
 		scrollPane.setViewportView(table);
 	}

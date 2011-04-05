@@ -3,6 +3,8 @@ package net.it_tim.security_console;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
+import net.it_tim.security_console.VideoExeptions.CantPlayException;
+
 import org.hibernate.classic.Session;
 import java.util.*;
 
@@ -30,7 +32,7 @@ public class SecurityConsole {
 
 					try {
 						container.playAll();
-					} catch (VideoExceptions.CantPlayException ex) {
+					} catch (CantPlayException ex) {
 						System.out.println(ex.getMessage());
 					}
 					

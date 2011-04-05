@@ -1,6 +1,7 @@
 package net.it_tim.security_console;
 
 import java.util.ArrayList;
+import net.it_tim.security_console.VideoExeptions.*;
 
 public class VideoContainer {
 
@@ -26,7 +27,7 @@ public class VideoContainer {
 		}
 	}
 
-	public void playAll() throws VideoExceptions.CantPlayException {
+	public void playAll() throws CantPlayException {
 		for (VlcCanvas canvasList: videoContainer)
 			canvasList.playVideo();
 	}
