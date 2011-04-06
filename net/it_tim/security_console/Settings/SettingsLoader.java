@@ -1,4 +1,4 @@
-package net.it_tim.security_console;
+package net.it_tim.security_console.Settings;
 
 import java.io.File;
 import java.io.FileInputStream;

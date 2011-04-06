@@ -11,7 +11,7 @@ public class VideoContainer {
 
 	public void createCanvas(String url, String description) {
 		VlcCanvas playerObject = new VlcCanvas(url);
-		playerObject.setSize(320, 240);
+		playerObject.setSize(600, 450);
 		videoContainer.add(playerObject);
 	}
 

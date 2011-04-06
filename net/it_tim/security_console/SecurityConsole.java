@@ -3,20 +3,25 @@ package net.it_tim.security_console;
 import java.awt.EventQueue;
 import javax.swing.JFrame;
 
+import net.it_tim.security_console.Settings.CamSetup;
 import net.it_tim.security_console.VideoExeptions.CantPlayException;
 
-import org.hibernate.classic.Session;
-import java.util.*;
-
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
 import javax.swing.JMenuBar;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.Dialog.ModalExclusionType;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+import java.awt.Dimension;
+import java.awt.GridLayout;
+import javax.swing.JLabel;
+import javax.swing.border.LineBorder;
+import java.awt.Color;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
 
 public class SecurityConsole {
 	private JFrame frame;
@@ -29,32 +34,13 @@ public class SecurityConsole {
 				try {
 					SecurityConsole window = new SecurityConsole();
 					window.frame.setVisible(true);
-
 					try {
 						container.playAll();
 					} catch (CantPlayException ex) {
 						System.out.println(ex.getMessage());
 					}
 					
-					Session session = HibernateUtil.getSessionFactory().getCurrentSession();
-			        session.beginTransaction();
 
-			        Camera cam = new Camera();
-			        cam.setDescription("Boguna 5a");
-			        cam.setCameraURL("rtsp://root:root0881@192.168.52.200:554/axis-media/media.amp");
-			        session.saveOrUpdate(cam);
-			        session.getTransaction().commit();
-			        
-			        session = HibernateUtil.getSessionFactory().getCurrentSession();
-			        session.beginTransaction();
-			        List cameras = session.createCriteria(Camera.class)
-			        .setMaxResults(50)
-			        .list();
-			        session.getTransaction().commit();
-
-			        for (Object cams: cameras){
-			        	System.out.println( ((Camera)cams).getCameraURL() );
-			        }
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -73,21 +59,50 @@ public class SecurityConsole {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		container.createCanvas("rtsp://root:root0881@192.168.52.200/axis-media/media.amp", "Boguna 5a");
+		container.createCanvas("rtsp://root:root0881@192.168.52.201/axis-media/media.amp", "Boguna 5a");
+		container.createCanvas("rtsp://root:root0881@192.168.52.203/axis-media/media.amp", "Boguna 5a");
 		frame = new JFrame("Відео спостереження");
 		frame.setModalExclusionType(ModalExclusionType.APPLICATION_EXCLUDE);
-		frame.setSize(1280, 960);
+		frame.setSize(1347, 960);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(new GridLayout(0, 1, 0, 0));
+		
+		JPanel panel = new JPanel();
+		panel.setMinimumSize(new Dimension(100, 100));
+		panel.setBorder(new LineBorder(new Color(0, 0, 0)));
+		frame.getContentPane().add(panel);
+		
+		JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setMinimumSize(new Dimension(220, 220));
+		
+		JPanel panel_2 = new JPanel();
+		panel_2.setBackground(new Color(255, 204, 153));
+		panel_2.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		scrollPane.setColumnHeaderView(panel_2);
+		
+		JLabel lblKeeper = new JLabel("Keeper");
+		panel_2.add(lblKeeper);
+		
+		JPanel panel_3 = new JPanel();
+		panel_3.setBorder(new LineBorder(new Color(0, 0, 0), 2, true));
+		scrollPane.setViewportView(panel_3);
+		
+		panel_3.add(container.getCanvas(0));
+		panel_3.add(container.getCanvas(1));
+		panel_3.add(container.getCanvas(2));
+		GroupLayout gl_panel = new GroupLayout(panel);
+		gl_panel.setHorizontalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 1335, Short.MAX_VALUE)
+		);
+		gl_panel.setVerticalGroup(
+			gl_panel.createParallelGroup(Alignment.LEADING)
+				.addComponent(scrollPane, GroupLayout.DEFAULT_SIZE, 906, Short.MAX_VALUE)
+		);
+		panel.setLayout(gl_panel);
 
-		//container.createCanvas("rtsp://root:root0881@192.168.52.200:554/axis-media/media.amp", "Boguna 5a");
-		//container.createCanvas("rtsp://root:root0881@192.168.52.201:554/axis-media/media.amp", "Boguna 5a");
-		//container.createCanvas("rtsp://root:root0881@192.168.52.203:554/axis-media/media.amp", "Boguna 5a");
 
-		GridBagLayout gridBagLayout = new GridBagLayout();
-		gridBagLayout.columnWidths = new int[]{0, 0, 0, 0, 0};
-		gridBagLayout.rowHeights = new int[]{0, 0, 0, 0, 0, 0};
-		gridBagLayout.columnWeights = new double[]{0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		gridBagLayout.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
-		frame.getContentPane().setLayout(gridBagLayout);
 		
 		JMenuBar menuBar = new JMenuBar();
 		frame.setJMenuBar(menuBar);
@@ -115,23 +130,6 @@ public class SecurityConsole {
 		});
 		mnSystem.add(mntmCamerasSetup);
 
-		GridBagConstraints gbc_canvas = new GridBagConstraints();
-		gbc_canvas.insets = new Insets(0, 0, 1, 1);
-		gbc_canvas.gridx = 1;
-		gbc_canvas.gridy = 0;
-		//frame.getContentPane().add(container.getCanvas(0), gbc_canvas);
-
-		GridBagConstraints gbc_canvas_1 = new GridBagConstraints();
-		gbc_canvas_1.insets = new Insets(0, 0, 1, 1);
-		gbc_canvas_1.gridx = 2;
-		gbc_canvas_1.gridy = 0;
-		//frame.getContentPane().add(container.getCanvas(1), gbc_canvas_1);
-
-		GridBagConstraints gbc_canvas_2 = new GridBagConstraints();
-		gbc_canvas_2.insets = new Insets(0, 0, 1, 1);
-		gbc_canvas_2.gridx = 1;
-		gbc_canvas_2.gridy = 1;
-		//frame.getContentPane().add(container.getCanvas(2), gbc_canvas_2);
 	}
 	
 	private static VideoContainer container = new VideoContainer();
